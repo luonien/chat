@@ -1,9 +1,24 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import send from '../../assets/imgs/send.png'
 import back from '../../assets/imgs/back.png'
+import AppProviders from '../../contexts';
 import styles from './style.module.scss'
 import { Popup } from 'antd-mobile'
+import { useSocket } from '../../contexts/socket';
 function App() {
+  const socket = useSocket();
+  useEffect(() => {
+    // componentDidMount
+    socket.on('message', (data)=>{console.log(data);
+    }); // 监听消息
+    return () => {
+      // componentWillUnmount
+      // socket.off('message', handleMessage);
+    };
+  }, [socket]);
+  const sendMsg=()=>{
+    socket.emit('message','lalala')
+  }
   const [visible, setVisible] = useState(false)
   const chat = [
     {
@@ -146,18 +161,20 @@ function App() {
     },
   ]
   return (
-    <div className={styles.page}>
+    <AppProviders>
+      <div className={styles.page}>
       <div className={styles.header}>
         <div className={styles.back}>
           <img src={back} alt='' />
         </div>
         <div className={styles.others}>
-          {users.map((item) => (
+          {users.map((item,index) => (
             <div
               className={styles.users}
               onClick={() => {
                 setVisible(true)
               }}
+              key={index}
             >
               <img src={require('../../assets/avatars/avatar1.png')} alt='' />
               {item.tip ? <div className={styles.dot}></div> : null}
@@ -172,7 +189,6 @@ function App() {
             setVisible(false)
           }}
         >
-      
             <div className={styles.username}>小米</div>
             <div className={styles.main}>
             {chat.map((item, index) => {
@@ -281,11 +297,13 @@ function App() {
       </div>
       <div className={styles.chat}>
         <input />
-        <div className={styles.send}>
+        <div className={styles.send} onClick={()=>sendMsg()}>
           <img src={send} alt='' />
         </div>
       </div>
     </div>
+    </AppProviders>
+    
   )
 }
 
