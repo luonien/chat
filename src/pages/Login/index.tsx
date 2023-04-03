@@ -3,10 +3,23 @@ import styles from './styles.module.scss'
 import down from '../../assets/imgs/down.png'
 import { Popup } from 'antd-mobile'
 import { useNavigate } from 'react-router-dom'
-export default function Login() {
+import { observer } from "mobx-react-lite";
+import{userStore} from '../../store'
+import { useSocket } from '../../contexts/socket'
+ function Login() {
+   const socket = useSocket()
     const [visible, setVisible] = useState(false)
-    const [dot,setDot]=useState('avatar1')
+    const [username,setUsername]=useState('')
+    const [avatar,setAvatar]=useState('avatar1')
     const navigate =useNavigate()
+    const handleLogin=()=>{ 
+        userStore.setUser(username,avatar)
+        socket.emit('user', {
+          name:username,
+        })
+        navigate('/chat')
+    }
+    
     let lists=[]
     for(let i=1;i<19;i++){
         lists.push(`avatar${i}`)
@@ -17,7 +30,7 @@ export default function Login() {
       <div className={styles.main}>
         <div className={styles.avatar} onClick={()=>{setVisible(true)}}>
           <img
-            src={require('../../assets/avatars/'+dot+'.png')}
+            src={require('../../assets/avatars/'+avatar+'.png')}
             alt=''
           />
           <div className={styles.down}>
@@ -38,22 +51,25 @@ export default function Login() {
                 <div className={styles.content}>
               {
                 lists.map(
-                    avatar=>
-                    <div className={styles.avatars} onClick={()=>{setDot(avatar)
-                    }}  key={avatar}> 
-                    <img src={require('../../assets/avatars/'+avatar+'.png')} alt=''/>
-                    <div className={styles.dot} style={dot===avatar? {opacity:1}:{opacity:0}}></div>
+                    item=>
+                    <div className={styles.avatars} onClick={()=>{setAvatar(item)
+                    }}  key={item}> 
+                    <img src={require('../../assets/avatars/'+item+'.png')} alt=''/>
+                    <div className={styles.dot} style={item===avatar? {opacity:1}:{opacity:0}}></div>
                     </div>
                 )
               }
                 
                 </div>
             </Popup>
-        <input type='text' className={styles.username} placeholder="请取一个名字" />
+        <input type='text' className={styles.username} placeholder="请取一个名字" value={username} onChange={(e)=>setUsername(e.target.value)}
+        
+        />
       </div>
-      <div className={styles.join} onClick={() => navigate('/chat')}>
+      <div className={styles.join} onClick={()=>handleLogin()}>
         加入
       </div>
     </div>
   )
 }
+export default observer(Login)

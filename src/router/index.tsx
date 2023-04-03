@@ -6,10 +6,10 @@ import Login from '../pages/Login'
 export default function Router() {
   return (
     <BrowserRouter>
-    <Routes>
-        <Route path='/' element={<Login/>}/>
-        <Route path='/chat' element={<App/>}/>
-    </Routes>
+      <Routes>
+        <Route path='/' element={<Login />} />
+        <Route path='/chat' element={<App />} />
+      </Routes>
     </BrowserRouter>
   )
 }
