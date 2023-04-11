@@ -78,8 +78,7 @@ function App() {
           ))}
         </div>
         <Popup
-          className={styles.popContent}
-          bodyClassName='popContent'
+          bodyClassName={styles.popContent}
           visible={visible}
           onMaskClick={() => {
             setVisible(false)
