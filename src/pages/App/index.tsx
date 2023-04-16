@@ -78,7 +78,7 @@ function App() {
           ))}
         </div>
         <Popup
-          bodyClassName={styles.popContent}
+          bodyClassName='popContent'
           visible={visible}
           onMaskClick={() => {
             setVisible(false)
@@ -86,16 +86,6 @@ function App() {
         >
           <div className={styles.username}>小米</div>
           <div className={styles.main}>
-            {chat.map((item) => (
-              <Message
-                stat={item.stat}
-                name={item.name}
-                key={nanoid()}
-                avatar={item.avatar}
-                message={item.message}
-                time={item.time}
-              />
-            ))}
           </div>
           <div className={styles.chat}>
             <input />
